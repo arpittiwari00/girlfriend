@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#150d1f">
+<meta name="color-scheme" content="dark">
+<title>A Question For You 💍</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💍%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#150d1f; --plum:#2a1538; --rose:#e8a0b4; --blush:#f7d9e0;
+  --gold:#f2c97d; --gold-deep:#c8963e; --ink:#fff7f2;
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --script:'Pinyon Script','Snell Roundhand','Brush Script MT',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{height:100%}
+body{
+  background:#150d1f;
+  background:radial-gradient(ellipse at 50% 0%,var(--plum) 0%,var(--night) 70%);
+  color:var(--ink);font-family:var(--serif);overflow:hidden;
+  display:-webkit-box;display:-webkit-flex;display:flex;align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
+canvas#sky{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.glow{position:fixed;left:50%;top:50%;width:90vmin;height:90vmin;
+  -webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(242,201,125,.16),transparent 62%);pointer-events:none;
+  -webkit-animation:breathe 6s ease-in-out infinite;animation:breathe 6s ease-in-out infinite}
+@-webkit-keyframes breathe{50%{opacity:.55;-webkit-transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes breathe{50%{opacity:.55;transform:translate(-50%,-50%) scale(1.08)}}
+
+.scene{position:fixed;top:0;right:0;bottom:0;left:0;
+  display:-webkit-box;display:-webkit-flex;display:flex;
+  -webkit-flex-direction:column;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;
+  padding:max(24px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));
+  text-align:center;
+  opacity:0;visibility:hidden;
+  -webkit-transition:opacity 1.2s ease,visibility 1.2s;transition:opacity 1.2s ease,visibility 1.2s}
+.scene.on{opacity:1;visibility:visible}
+
+h1,h2{font-weight:400}
+.script{font-family:var(--script);color:var(--gold);line-height:1.1}
+.intro-name{font-size:4rem;font-size:clamp(3rem,13vw,6.5rem);text-shadow:0 0 40px rgba(242,201,125,.45)}
+.hint{margin-top:1rem;font-style:italic;font-size:1.25rem;color:var(--blush);opacity:.85}
+
+button{font:inherit;cursor:pointer;border:0;color:inherit;-webkit-appearance:none;appearance:none;
+  touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.begin{margin-top:2.5rem;padding:.9rem 2.6rem;border-radius:999px;font-size:1.3rem;font-style:italic;
+  background:transparent;border:1px solid var(--gold);color:var(--gold);-webkit-transition:.4s;transition:.4s}
+.begin:hover,.begin:focus-visible{background:var(--gold);color:var(--night);box-shadow:0 0 36px rgba(242,201,125,.5)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+
+/* story */
+.story{max-width:34rem;min-height:9rem;font-size:1.6rem;font-size:clamp(1.5rem,5vw,2.2rem);line-height:1.5;font-style:italic;color:var(--blush)}
+.story span{display:block;opacity:0;-webkit-transition:opacity 1.6s;transition:opacity 1.6s}
+.story span.show{opacity:1}
+.skip{position:fixed;bottom:18px;bottom:max(18px,env(safe-area-inset-bottom));font-size:1rem;background:none;color:var(--rose);opacity:.6;font-style:italic;padding:.5rem 1rem}
+
+/* ring */
+.ring-wrap{position:relative;width:180px;height:180px;
+  width:min(46vw,200px,28vh);height:min(46vw,200px,28vh);min-width:90px;min-height:90px;margin-bottom:1.2rem;
+  -webkit-animation:rise 2.4s cubic-bezier(.2,.8,.2,1) both,float 5s 2.4s ease-in-out infinite;
+  animation:rise 2.4s cubic-bezier(.2,.8,.2,1) both,float 5s 2.4s ease-in-out infinite}
+@-webkit-keyframes rise{from{-webkit-transform:translateY(60px) scale(.4) rotate(-20deg);opacity:0}to{-webkit-transform:none;opacity:1}}
+@keyframes rise{from{transform:translateY(60px) scale(.4) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+@-webkit-keyframes float{50%{-webkit-transform:translateY(-10px) rotate(2deg)}}
+@keyframes float{50%{transform:translateY(-10px) rotate(2deg)}}
+.ring-wrap svg{width:100%;height:100%;overflow:visible;
+  -webkit-filter:drop-shadow(0 0 22px rgba(242,201,125,.65));filter:drop-shadow(0 0 22px rgba(242,201,125,.65))}
+.spark{-webkit-transform-origin:50% 50%;transform-origin:50% 50%;
+  -webkit-animation:twinkle 2.2s ease-in-out infinite;animation:twinkle 2.2s ease-in-out infinite;transform-box:fill-box}
+@-webkit-keyframes twinkle{0%,100%{opacity:.2;-webkit-transform:scale(.4)}50%{opacity:1;-webkit-transform:scale(1.1)}}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(.4)}50%{opacity:1;transform:scale(1.1)}}
+
+.ask{font-size:3.5rem;font-size:clamp(3rem,12vw,6rem);margin-bottom:.4rem;text-shadow:0 0 40px rgba(242,201,125,.4)}
+.sub{font-style:italic;font-size:1.3rem;color:var(--blush);min-height:2rem;max-width:28rem}
+.choices{display:-webkit-box;display:-webkit-flex;display:flex;align-items:center;justify-content:center;
+  margin-top:2.2rem;min-height:4.5rem;-webkit-flex-wrap:wrap;flex-wrap:wrap}
+.choices button{margin:.5rem .6rem}
+.yes{padding:.9rem 2.8rem;border-radius:999px;font-size:1.5rem;font-weight:600;
+  background:#f2c97d;background:linear-gradient(135deg,#fbe3a6,var(--gold-deep));color:#2b1608;
+  box-shadow:0 0 0 0 rgba(242,201,125,.6),0 8px 30px rgba(200,150,62,.4);
+  -webkit-transition:-webkit-transform .35s cubic-bezier(.3,1.6,.5,1);transition:transform .35s cubic-bezier(.3,1.6,.5,1);
+  -webkit-animation:pulse 2s infinite;animation:pulse 2s infinite}
+@-webkit-keyframes pulse{70%{box-shadow:0 0 0 22px rgba(242,201,125,0),0 8px 30px rgba(200,150,62,.4)}100%{box-shadow:0 0 0 0 rgba(242,201,125,0)}}
+@keyframes pulse{70%{box-shadow:0 0 0 22px rgba(242,201,125,0),0 8px 30px rgba(200,150,62,.4)}100%{box-shadow:0 0 0 0 rgba(242,201,125,0)}}
+.no{padding:.7rem 1.6rem;border-radius:999px;font-size:1.1rem;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);color:var(--blush);
+  -webkit-transition:left .35s,top .35s,-webkit-transform .35s;transition:left .35s,top .35s,transform .35s}
+.choices .no.fly{position:fixed;z-index:5;margin:0}
+
+/* answer */
+.yes-title{font-size:4rem;font-size:clamp(3.2rem,14vw,7rem);text-shadow:0 0 50px rgba(242,201,125,.6)}
+.letter{max-width:32rem;margin-top:1.4rem;font-size:1.45rem;line-height:1.6;font-style:italic;color:var(--blush)}
+.sign{margin-top:1.4rem;font-size:2.6rem}
+.again{margin-top:2rem;background:none;color:var(--rose);font-style:italic;font-size:1.05rem;opacity:.7;text-decoration:underline;padding:.5rem 1rem}
+
+/* short screens (phones in landscape) */
+@media (max-height:560px){
+  .ring-wrap{margin-bottom:.3rem}
+  .choices{margin-top:.8rem;min-height:3.5rem}
+  .ask{margin-bottom:0}
+  .hint,.letter{font-size:1.1rem}
+  .begin{margin-top:1.2rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{-webkit-animation-duration:.01ms!important;animation-duration:.01ms!important;
+    -webkit-animation-iteration-count:1!important;animation-iteration-count:1!important;
+    -webkit-transition-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+
+<!-- 1. Intro -->
+<section class="scene on" id="s-intro">
+  <h1 class="script intro-name" id="introName"></h1>
+  <p class="hint">there is something I have been wanting to ask you</p>
+  <button class="begin" id="beginBtn">Open</button>
+</section>
+
+<!-- 2. Story -->
+<section class="scene" id="s-story">
+  <div class="story" id="story" aria-live="polite"></div>
+  <button class="skip" id="skipBtn">skip</button>
+</section>
+
+<!-- 3. The question -->
+<section class="scene" id="s-ask">
+  <div class="ring-wrap" aria-hidden="true">
+    <svg viewBox="0 0 200 200">
+      <defs>
+        <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#fff0c4"/><stop offset=".5" stop-color="#f2c97d"/><stop offset="1" stop-color="#b9842f"/>
+        </linearGradient>
+        <linearGradient id="gem" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#cfe9ff"/><stop offset="1" stop-color="#8fb8e8"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="100" cy="128" rx="58" ry="52" fill="none" stroke="url(#gold)" stroke-width="12"/>
+      <ellipse cx="100" cy="128" rx="58" ry="52" fill="none" stroke="#fff6d8" stroke-opacity=".45" stroke-width="2" transform="translate(-3 -3)"/>
+      <path d="M78 66 L100 38 L122 66 L100 92 Z" fill="url(#gem)" stroke="#ffffff" stroke-opacity=".8" stroke-width="1.5"/>
+      <path d="M78 66 H122 M100 38 L92 66 L100 92 L108 66 Z" fill="none" stroke="#9cc3ee" stroke-width="1"/>
+      <path d="M86 94 L100 100 L114 94 L100 92 Z" fill="url(#gold)"/>
+      <g fill="#fff">
+        <path class="spark" d="M142 36 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3z" style="animation-delay:.2s;-webkit-animation-delay:.2s"/>
+        <path class="spark" d="M52 52 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2z" style="animation-delay:1s;-webkit-animation-delay:1s"/>
+        <path class="spark" d="M100 14 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2z" style="animation-delay:1.6s;-webkit-animation-delay:1.6s"/>
+      </g>
+    </svg>
+  </div>
+  <h2 class="script ask" id="askTitle">Will you marry me?</h2>
+  <p class="sub" id="sub"></p>
+  <div class="choices" id="choices">
+    <button class="yes" id="yesBtn">Yes</button>
+    <button class="no" id="noBtn">No</button>
+  </div>
+</section>
+
+<!-- 4. She said yes -->
+<section class="scene" id="s-yes">
+  <h2 class="script yes-title">she said yes</h2>
+  <p class="letter" id="letter"></p>
+  <p class="script sign" id="sign"></p>
+  <button class="again" id="againBtn">see it again</button>
+</section>
+
+<script>
+/* ============ EDIT THIS PART ============ */
+const CONFIG = {
+  her: "Anushka",
+  him: "Arpit",
+  story: [
+    "From the day we met, everything felt different.",
+    "Every laugh, every late-night call, every quiet moment with you became my favourite part of life.",
+    "You turned ordinary days into memories I never want to lose.",
+    "And I realised I don't want a single tomorrow without you in it."
+  ],
+  question: "Will you marry me?",
+  // Shown on the final screen after she says yes
+  letter: "You just made me the happiest person in the world. I promise to choose you, laugh with you, and love you every single day, for the rest of our lives.",
+  date: "" // optional, e.g. "15 October 2026"
+};
+/* ========================================= */
+
+const $ = id => document.getElementById(id);
+const scenes = ['s-intro','s-story','s-ask','s-yes'];
+function go(id){ scenes.forEach(s => $(s).classList.toggle('on', s === id)); }
+
+$('introName').textContent = CONFIG.her;
+$('askTitle').textContent = CONFIG.question;
+$('letter').textContent = CONFIG.letter;
+$('sign').textContent = 'Forever yours, ' + CONFIG.him + (CONFIG.date ? ' · ' + CONFIG.date : '');
+
+/* ---------- Sky: stars + drifting petals + burst confetti ---------- */
+const cv = $('sky'), cx = cv.getContext('2d');
+let W, H, DPR;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = cv.width = Math.round(window.innerWidth * DPR);
+  H = cv.height = Math.round(window.innerHeight * DPR);
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 250));
+resize();
+
+const stars = Array.from({length:110}, () => ({
+  x:Math.random(), y:Math.random(), r:Math.random()*1.4+.3, p:Math.random()*6.28, s:Math.random()*.02+.005
+}));
+const petals = Array.from({length:22}, () => newPetal(true));
+function newPetal(init){
+  return { x:Math.random()*W, y:init ? Math.random()*H : -20*DPR, s:(Math.random()*.8+.4)*DPR,
+    sz:(Math.random()*7+6)*DPR, a:Math.random()*6.28, va:(Math.random()-.5)*.03, sw:Math.random()*6.28,
+    c:['#e8a0b4','#f7d9e0','#d97b95','#f2c97d'][Math.floor(Math.random()*4)] };
+}
+let confetti = [];
+function burst(x, y, n){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*6.28, v = (Math.random()*9+3)*DPR;
+    confetti.push({ x:x*DPR, y:y*DPR, vx:Math.cos(a)*v, vy:Math.sin(a)*v - 5*DPR, g:.2*DPR,
+      sz:(Math.random()*9+5)*DPR, a:Math.random()*6.28, va:(Math.random()-.5)*.3, life:1,
+      heart:Math.random()<.45, c:['#e8a0b4','#f2c97d','#ffffff','#d97b95','#ffd9e3'][Math.floor(Math.random()*5)] });
+  }
+}
+function heart(c, s){
+  c.beginPath(); c.moveTo(0, s*.35);
+  c.bezierCurveTo(-s, -s*.3, -s*.5, -s, 0, -s*.4);
+  c.bezierCurveTo(s*.5, -s, s, -s*.3, 0, s*.35); c.fill();
+}
+function drawPetal(c, p){
+  c.beginPath();
+  if(c.ellipse) c.ellipse(0,0,p.sz*.5,p.sz,0,0,6.28);
+  else { c.save(); c.scale(.5,1); c.arc(0,0,p.sz,0,6.28); c.restore(); }
+  c.fill();
+}
+
+/* Frame-rate independent animation: same speed on 60Hz, 120Hz and 144Hz screens */
+let t = 0, last = 0;
+function frame(now){
+  now = now || Date.now();
+  let dt = last ? (now - last) / 16.667 : 1;
+  last = now;
+  if(dt > 3) dt = 3;
+  t += dt;
+  cx.clearRect(0,0,W,H);
+  for(const s of stars){
+    cx.globalAlpha = .35 + .65*Math.abs(Math.sin(s.p + t*s.s));
+    cx.fillStyle = '#fff7e0'; cx.beginPath(); cx.arc(s.x*W, s.y*H, s.r*DPR, 0, 6.28); cx.fill();
+  }
+  cx.globalAlpha = .75;
+  for(const p of petals){
+    p.y += p.s*dt; p.x += Math.sin(t*.01 + p.sw)*.6*DPR*dt; p.a += p.va*dt;
+    if(p.y > H + 20) Object.assign(p, newPetal(false));
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.a); cx.fillStyle = p.c;
+    drawPetal(cx, p); cx.restore();
+  }
+  confetti = confetti.filter(c => c.life > 0 && c.y < H + 40);
+  const drag = Math.pow(.992, dt);
+  for(const c of confetti){
+    c.vy += c.g*dt; c.vx *= drag; c.x += c.vx*dt; c.y += c.vy*dt; c.a += c.va*dt; c.life -= .004*dt;
+    cx.globalAlpha = Math.max(c.life, 0); cx.fillStyle = c.c;
+    cx.save(); cx.translate(c.x, c.y); cx.rotate(c.a);
+    if(c.heart) heart(cx, c.sz); else cx.fillRect(-c.sz/2, -c.sz/4, c.sz, c.sz/2);
+    cx.restore();
+  }
+  cx.globalAlpha = 1;
+  window.requestAnimationFrame(frame);
+}
+window.requestAnimationFrame(frame);
+
+/* ---------- Soft chime (no audio files needed) ---------- */
+let ac;
+function getAudio(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!ac) ac = new AC();
+  if(ac.state === 'suspended' && ac.resume) ac.resume();
+  return ac;
+}
+function chime(notes){
+  try{
+    const a = getAudio(); if(!a) return;
+    notes.forEach((f,i) => {
+      const o = a.createOscillator(), g = a.createGain(), t0 = a.currentTime + i*.16;
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(.14, t0+.03);
+      g.gain.exponentialRampToValueAtTime(.001, t0+1.6);
+      o.connect(g); g.connect(a.destination);
+      o.start(t0); o.stop(t0+1.7);
+    });
+  }catch(e){}
+}
+
+/* ---------- Story sequence ---------- */
+let storyTimer = null, storyDone = false;
+function playStory(){
+  const box = $('story'); box.innerHTML = ''; storyDone = false;
+  const spans = CONFIG.story.map(line => { const s = document.createElement('span'); s.textContent = line; s.style.marginBottom = '.6rem'; box.appendChild(s); return s; });
+  let i = 0;
+  (function next(){
+    if(storyDone) return;
+    if(i < spans.length){
+      if(i > 0) spans[i-1].style.opacity = '.45';
+      spans[i++].classList.add('show');
+      storyTimer = setTimeout(next, 3600);
+    } else storyTimer = setTimeout(finishStory, 2200);
+  })();
+}
+function finishStory(){
+  if(storyDone) return; storyDone = true; clearTimeout(storyTimer);
+  go('s-ask'); chime([523.25, 659.25, 783.99, 1046.5]);
+  setTimeout(() => burst(window.innerWidth/2, window.innerHeight*.3, 28), 900);
+}
+$('beginBtn').onclick = () => { getAudio(); go('s-story'); chime([392, 523.25]); playStory(); };
+$('skipBtn').onclick = finishStory;
+
+/* ---------- The "No" button that can't be caught ---------- */
+const noLines = [
+  "Are you sure? 🥺", "Think about it again…", "Please? I made this whole website for you",
+  "My heart is breaking a little", "That button is getting tired, you know", "You know you want to say yes 💕",
+  "Okay, the other button is looking really good now"
+];
+let noCount = 0, scale = 1, lastDodge = 0;
+const noBtn = $('noBtn'), yesBtn = $('yesBtn'), sub = $('sub');
+function dodge(e){
+  if(noBtn.dataset.yes) return;
+  if(e && e.cancelable) e.preventDefault();
+  /* touch screens fire several events per tap: count only one */
+  const now = Date.now();
+  if(now - lastDodge < 350) return;
+  lastDodge = now;
+
+  noCount++;
+  sub.textContent = noLines[Math.min(noCount-1, noLines.length-1)];
+
+  /* keep the Yes button inside the screen on narrow phones */
+  const maxScale = Math.max(1, (window.innerWidth - 40) / yesBtn.offsetWidth);
+  scale = Math.min(scale + .22, 2.6, maxScale);
+  yesBtn.style.webkitTransform = yesBtn.style.transform = 'scale(' + scale + ')';
+
+  /* start the flight from where the button currently sits so it glides on every browser */
+  if(!noBtn.classList.contains('fly')){
+    const r = noBtn.getBoundingClientRect();
+    noBtn.style.left = r.left + 'px'; noBtn.style.top = r.top + 'px';
+    noBtn.classList.add('fly');
+    void noBtn.offsetWidth;
+  }
+  const pad = 20, bw = noBtn.offsetWidth, bh = noBtn.offsetHeight;
+  noBtn.style.left = Math.max(pad, pad + Math.random()*(window.innerWidth - bw - pad*2)) + 'px';
+  noBtn.style.top  = Math.max(pad, pad + Math.random()*(window.innerHeight - bh - pad*2)) + 'px';
+  const s = 'scale(' + Math.max(1 - noCount*.07, .5) + ')';
+  noBtn.style.webkitTransform = noBtn.style.transform = s;
+
+  if(noCount >= 8){ noBtn.textContent = 'Yes 💍'; noBtn.dataset.yes = '1'; noBtn.onclick = sayYes; }
+}
+noBtn.addEventListener(window.PointerEvent ? 'pointerenter' : 'mouseenter', dodge);
+noBtn.addEventListener('touchstart', dodge, {passive:false});
+noBtn.addEventListener('click', dodge);
+
+/* ---------- Yes! ---------- */
+function sayYes(){
+  go('s-yes');
+  chime([523.25, 659.25, 783.99, 1046.5, 1318.5]);
+  const bursts = [[.5,.5,90],[.2,.4,50],[.8,.4,50],[.35,.25,40],[.65,.25,40]];
+  bursts.forEach((b,i) => setTimeout(() => burst(window.innerWidth*b[0], window.innerHeight*b[1], b[2]), i*350));
+  const rain = setInterval(() => burst(Math.random()*window.innerWidth, -10, 6), 300);
+  setTimeout(() => clearInterval(rain), 7000);
+}
+yesBtn.onclick = sayYes;
+
+$('againBtn').onclick = () => {
+  noCount = 0; scale = 1; lastDodge = 0;
+  yesBtn.style.webkitTransform = yesBtn.style.transform = ''; sub.textContent = '';
+  noBtn.classList.remove('fly'); noBtn.removeAttribute('style'); noBtn.textContent = 'No';
+  delete noBtn.dataset.yes; noBtn.onclick = null;
+  go('s-intro');
+};
+</script>
+</body>
+</html>
